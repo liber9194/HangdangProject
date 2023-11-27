@@ -22,9 +22,6 @@ public class LikeService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다. id=" + goodsId));
         Like like = new Like(goods, user);
         likeRepository.save(like);
-
-        goods.setLikeCount(goods.getLikeCount() + 1);  // 좋아요 개수 증가
-        goodsRepository.save(goods);  // 변경된 상품 정보 저장
     }
 
     // 좋아요 취소
@@ -34,12 +31,6 @@ public class LikeService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 좋아요가 존재하지 않습니다."));
         if (like.getGoods().getId().equals(goodsId) && like.getUser().getId().equals(user.getId())) {
             likeRepository.delete(like);
-
-            Goods goods = goodsRepository.findById(goodsId)
-                    .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다. id=" + goodsId));
-            goods.setLikeCount(goods.getLikeCount() - 1);  // 좋아요 개수 감소
-            goodsRepository.save(goods);  // 변경된 상품 정보 저장
-
         } else {
             throw new IllegalArgumentException("삭제하려는 좋아요 정보가 일치하지 않습니다.");
         }
